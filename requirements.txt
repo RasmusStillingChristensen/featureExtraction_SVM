@@ -1,0 +1,15 @@
+scikit-learn
+scipy
+numpy
+matplotlib
+onnxruntime
+opencv-python
+onnx
+torch
+timm
+pillow
+torchvision
+pandas
+statistics  # Often included in Python standard library; might not require installation
+
+
