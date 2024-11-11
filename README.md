@@ -1,55 +1,60 @@
-The directory contains files used for feature extraction from images, generation of difference vectors from D-MAD pairs, generation and testing of SVM models from difference vectors.
+# Image Feature Extraction and SVM Model Testing
 
+This repository contains scripts for feature extraction from images, generation of difference vectors, and training/testing SVM models on the extracted features. The primary goal is to compare different feature extraction methods and evaluate SVM model performance using DET (Detection Error Tradeoff) curves.
 
-Files contained in the directory:
+## Directory Structure and Contents
 
-Generation of DET curves
-DET.py
+### Feature Extraction Scripts
+1. **`extract_512_vectors.py`** - Extracts "beauty" features from a modified VGG-16 model pre-trained on the SCUT-FBP 5500 dataset.
+2. **`extract_arcface_vectors.py`** - Extracts feature vectors from an ONNX model trained on the LFW dataset with ArcFace loss.
+3. **`extract_dino_base_vectors.py`** - Extracts CLS tokens from a ViT model (`vit_base_patch16_224_dino`) for feature extraction.
+4. **`extract_dinov2_base_vectors.py`** - Extracts CLS tokens from the `dinov2_vitb14` model for feature extraction.
 
-Extracts beauty features from modified VGG-16 model trained on SCUT-FBP 5500
-extract_512_vectors.py
+### Difference Vector Generation
+- **`vectors_to_svm.py`** - Converts extracted feature vectors from paired images (D-MAD pairs) into difference vectors, suitable for training and testing SVM models. Output is in `.libsvm` format for direct compatibility with libsvm.
 
-Extracts arcface feaure vectors from ONNX model trained on LFW with Arcface loss function
-extract_arcface_vectors.py
+### DET Curve Generation
+- **`DET.py`** - Generates DET curves, useful for visualizing SVM model performance across feature extraction methods.
 
-Extracts CLS tokens from pretrained vit_base_patch16_224_dino
-extract_dino_base_vectors.py
+### SVM Model Generation and Testing
+These scripts compare the performance of ArcFace, VGG-16 beauty features, and DINO features across various datasets:
 
-Extracts CLS tokens from pretrained dinov2_vitb14
-extract_dinov2_base_vectors.py
+1. **`train_test_svm_cropped_combined_DET.py`** - SVM training and testing on FRGC and FERET datasets using ArcFace and VGG-16 beauty vectors.
+2. **`train_test_svm_MSYNM.py`** - SVM model generation/testing on FRGC, FERET, and MSYNM datasets, comparing ArcFace with VGG-16 beauty vectors.
+3. **`train_test_svm_FRLL.py`** - SVM model generation/testing on FRGC, FRLL, and FERET datasets, comparing ArcFace with VGG-16 beauty vectors.
+4. **`train_test_svm_dinov2.py`** - SVM training/testing on FRGC and FERET datasets, comparing ArcFace and DINO.
+5. **`train_test_svm_dino.py`** - SVM training/testing on FRGC and FERET datasets, comparing ArcFace and DINOv2.
 
-Conversion of extracted CLS tokens or feature vectors to difference vectors from D-MAD pairs, in the form of a .libsvm file which can either be used for generating svm models in the other files or directly using libsvm executables
-vectors_to_svm.py
+## Usage Guide
 
-SVM model generation and testing from FRGC and FERET datasets, comparing performance of ArcFace and ArcFace combined with VGG16 beauty vectors
-train_test_svm_cropped_combined_DET.py
+### Step 1: Extract Feature Vectors
+To begin, use one of the feature extraction scripts on an image dataset:
+- Ensure the dataset is structured with images located in an `img/` folder.
+- Run the desired script to generate feature vectors.
 
-SVM model generation and testing from FRGC, FERET and MSYNM datasets, comparing performance of ArcFace and ArcFace combined with VGG16 beauty vectors
-train_test_svm_MSYNM.py
+### Step 2: Generate Difference Vectors
+Use **`vectors_to_svm.py`** on two sets of extracted feature vectors to create D-MAD pairs and difference vectors. These will be labeled for SVM training and testing.
 
-SVM model generation and testing from FRGC, FRLL and FERET datasets, comparing performance of ArcFace and ArcFace combined with VGG16 beauty vectors
-train_test_svm_FRLL.py
+### Step 3: Train and Test SVM Models
+Use one of the SVM training/testing scripts:
+- Each script performs SVM training and testing on specific datasets, generating DET curves to assess model performance.
+- Models can be configured to evaluate different feature extraction methods and combinations (e.g., ArcFace vs. ArcFace + VGG-16).
 
-SVM model generation and testing from FRGC and FERET datasets, comparing performance of ArcFace and DINO
-train_test_svm_dinov2.py
+## Requirements
+To run the scripts in this repository, you will need the following Python packages:
 
-SVM model generation and testing from FRGC and FERET datasets, comparing performance of ArcFace and DINOv2
-train_test_svm_dino.py
-
-The folder trained_model_VGG_beauty_512 contains 2 files:
-
-Image showing loss from training VGG16 model using SCUT-FBP 5500
-beauty_rates_loss.png
-
-VGG16 model to extract beauty vectors
-VGG16_beauty_rates
-
-
-How to use:
-1. Extract feature vectors or CLS tokens from multiple image sets using one of the extraction scripts.
-	-Folder containing the image set should contain a /img folder with all the images
-
-2. vectors_to_svm.py can be used on 2 sets of extracted feature vectors, generating D-MAD pairs and generating difference vectors from the 2 sets labeling all image with either 0 or 1 to be used for training and testing SVM models.
-
-3. The train_test files all contains sets of tests and generation of DET curves based on extracted features which can be used to evaluate the performance of different extraction methods.
-
+```plaintext
+scikit-learn
+scipy
+numpy
+matplotlib
+onnxruntime
+opencv-python
+onnx
+torch
+timm
+pillow
+torchvision
+statistics
+pickle
+pandas
