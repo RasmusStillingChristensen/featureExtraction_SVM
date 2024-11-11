@@ -1,64 +1,64 @@
 import argparse
 import os
 import numpy as np
-from PIL import Image
 import csv
+import onnx
 import onnxruntime
 import cv2
-import onnx
+from PIL import Image
 
+# Parse command-line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, help='path to the ONNX model')
-parser.add_argument('--dataset', type=str, help='path to the dataset we want to label')
+parser.add_argument('--model', type=str, help='Path to the ONNX model')
+parser.add_argument('--dataset', type=str, help='Path to the dataset for labeling')
 opt = parser.parse_args()
 print(opt)
 
-# Define preprocessing parameters
+# Preprocessing parameters for ONNX model input
 input_mean = 127.5
 input_std = 127.5
 input_size = (112, 112)
 
 def preprocess_image(image):
-    blob = cv2.dnn.blobFromImages([image], 1.0 / input_std, input_size, (input_mean, input_mean, input_mean), swapRB=True)
-    return blob
-	
+    """Preprocesses an image for ONNX model inference."""
+    return cv2.dnn.blobFromImages(
+        [image], 1.0 / input_std, input_size,
+        (input_mean, input_mean, input_mean), swapRB=True
+    )
+
 # Load the ONNX model
 onnx_model_path = opt.model
 session = onnxruntime.InferenceSession(onnx_model_path)
 
+# Extract input names for inference
 onnx_model = onnx.load(onnx_model_path)
 input_names = [input.name for input in onnx_model.graph.input]
 
+# Directory for input images
+images_dir = os.path.join(opt.dataset, "img")
 
-
-images_dir = "{0}/img".format(opt.dataset)
-
-# Create a CSV file to write the output features
+# CSV file path for saving output features
 csv_path = os.path.join(opt.dataset, "Arcface_vectors.csv")
 with open(csv_path, "w", newline='') as csv_file:
     csv_writer = csv.writer(csv_file)
     
-    # Iterate over images
+    # Process each image in the dataset
     for i, file in enumerate(sorted(os.listdir(images_dir))):
         img_path = os.path.join(images_dir, file)
         img = cv2.imread(img_path)
         
-        # Preprocess image
+        # Preprocess the image
         input_data = preprocess_image(img)
         
-        # Perform inference
+        # Run model inference
         output = session.run(None, {input_names[0]: input_data})
         
-        # Check if the output is a list
-        if isinstance(output, list):
-            # Flatten each element of the list
-            flattened_output = [item.flatten().tolist() for item in output]
-        else:
-            # Flatten the output directly
-            flattened_output = output.flatten().tolist()
-        # Write features to CSV
-        csv_writer.writerow([file] + flattened_output[0])
+        # Flatten the output data for CSV
+        flattened_output = output[0].flatten().tolist() if isinstance(output, list) else output.flatten().tolist()
+        
+        # Write the image filename and output features to CSV
+        csv_writer.writerow([file] + flattened_output)
 
-
-		
-		
+        # Progress update
+        if i % 100 == 0:
+            print(f'{i} images processed')

@@ -7,13 +7,13 @@ import numpy as np
 from PIL import Image
 from torchvision import transforms
 
-# Parse the dataset path argument
+# Parse dataset path argument
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', type=str, help='path to the dataset we want to label')
+parser.add_argument('--dataset', type=str, help='Path to the dataset for labeling')
 opt = parser.parse_args()
 print(opt)
 
-# Define preprocessing parameters for ViT (DINO)
+# Preprocessing parameters for ViT (DINO)
 input_size = (224, 224)  # ViT expects 224x224 images
 transform = transforms.Compose([
     transforms.Resize(input_size),
@@ -24,41 +24,41 @@ transform = transforms.Compose([
 
 # Load the DINO ViT-Base pre-trained model
 model = timm.create_model('vit_base_patch16_224_dino', pretrained=True)
-model.eval()  # Set the model to evaluation mode
+model.eval()  # Set model to evaluation mode
 
-# Function to preprocess an image
+# Preprocess an image to prepare it for the model
 def preprocess_image(image_path):
     img = Image.open(image_path).convert('RGB')
     img = transform(img)
-    img = img.unsqueeze(0)  # Add batch dimension
-    return img
+    return img.unsqueeze(0)  # Add batch dimension
 
 # Directory containing the images
 images_dir = os.path.join(opt.dataset, "img")
 
-# Create a CSV file to write the output features
+# CSV file path for saving CLS token features
 csv_path = os.path.join(opt.dataset, "DINO_vit_base_cls_features.csv")
 with open(csv_path, "w", newline='') as csv_file:
     csv_writer = csv.writer(csv_file)
     
-    # Iterate over images in the directory
+    # Process each image in the dataset
     for i, file in enumerate(sorted(os.listdir(images_dir))):
         img_path = os.path.join(images_dir, file)
         
-        # Preprocess image
+        # Preprocess the image
         input_data = preprocess_image(img_path)
         
-        # Perform inference and extract CLS token features
+        # Extract CLS token features through model inference
         with torch.no_grad():
-            features = model.forward_features(input_data)  # Extract features
+            features = model.forward_features(input_data)
             cls_token = features[:, 0, :]  # CLS token is the first token
 
-        # Flatten the CLS token feature vector to a 1D list
+        # Flatten CLS token feature vector for CSV
         flattened_cls_token = cls_token.flatten().tolist()
         
-        # Write the image filename and CLS token features to the CSV
+        # Write image filename and CLS token features to the CSV
         csv_writer.writerow([file] + flattened_cls_token)
 
+        # Print progress for every 100 images
         if i % 100 == 0:
             print(f"Processed {i} images...")
 
