@@ -1,4 +1,4 @@
-# Image Feature Extraction and SVM Model Testing
+# Image Feature Extraction and SVM Model Testing for Differential Morphing Attack Detection
 
 This repository contains scripts for feature extraction from images, generation of difference vectors, and training/testing SVM models on the extracted features. The primary goal is to compare different feature extraction methods and evaluate SVM model performance using DET (Detection Error Tradeoff) curves.
 
@@ -44,17 +44,17 @@ Use one of the SVM training/testing scripts:
 To run the scripts in this repository, you will need the following Python packages:
 
 ```plaintext
-scikit-learn
-scipy
-numpy
-matplotlib
-onnxruntime
-opencv-python
-onnx
-torch
-timm
-pillow
-torchvision
-statistics
-pickle
-pandas
+torch>=1.13.0
+torchvision>=0.14.0
+numpy>=1.21.0
+Pillow>=9.0.0
+opencv-python>=4.5.5
+onnx>=1.10.0
+onnxruntime>=1.10.0
+scipy>=1.7.0
+scikit-learn>=1.0.2
+matplotlib>=3.5.0
+pandas>=1.3.5
+timm>=0.6.7
+argparse>=1.4.0
+
