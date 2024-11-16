@@ -58,3 +58,10 @@ pandas>=1.3.5
 timm>=0.6.7
 argparse>=1.4.0
 
+## Example
+The example folder contains images from the FRLL-Morphs dataset: https://paperswithcode.com/dataset/frll-morphs
+- Trusted images from probe_smiling_front
+- Bonafide images from bonafide_neutral_front
+- Morphed images generated with FaceMorpher using images from bonafide_neutral_front
+
+Example.bat will use DINOv2 to extract CLS tokens and generate labeled difference vectors for libsvm 
