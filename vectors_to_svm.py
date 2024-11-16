@@ -23,7 +23,7 @@ difference=[]
 for i in range (0,trusted_data.shape[0]):
     trustedImageName=trusted_data.iloc[i][0]
     # Create DMAD pairs depending on dataset
-	if opt.dataset=="FERET":
+    if opt.dataset=="FERET":
         if trustedImageName.split("_")[2].startswith('f'):
             identity=trustedImageName.split("_")[0]
             for j in range(0,suspected_data.shape[0]):
