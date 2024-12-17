@@ -8,7 +8,7 @@ from torchvision import transforms
 
 # Parse dataset path argument
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', type=str, default='../datasets/CelebA-HQ', help='Path to the dataset for labeling')
+parser.add_argument('--dataset', type=str, help='Path to the dataset for feature extraction')
 opt = parser.parse_args()
 print(opt)
 
