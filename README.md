@@ -43,7 +43,7 @@ The example folder contains images from the FRLL-Morphs dataset: https://papersw
 Example.bat will use DINOv2 to extract CLS tokens and generate labeled difference vectors for libsvm
 
 ## Requirements
-To run the scripts in this repository, you will need the following Python packages and version python version 3.8:
+To run the scripts in this repository, you will need the following Python packages and python version 3.8:
 
 ```plaintext
 torch>=1.13.0
