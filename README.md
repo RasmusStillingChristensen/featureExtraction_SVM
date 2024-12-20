@@ -20,6 +20,9 @@ This repository contains scripts for feature extraction from images, generation 
 ### DET Curve Generation
 - **`DET.py`** - Generates DET curves, useful for visualizing SVM model performance across feature extraction methods.
 
+### Models for **`extract_512_vectors.py`** and **`extract_arcface_vectors.py`**
+The CNN models used in **`extract_512_vectors.py`** and **`extract_arcface_vectors.py`** can be found in the repository: [hda_beautyvectors](https://github.com/RasmusStillingChristensen/hda_beautyvectors).
+
 ## Usage Guide
 
 ### Step 1: Extract Feature Vectors
@@ -60,3 +63,16 @@ pandas>=1.3.5
 timm>=0.6.7
 argparse>=1.4.0
 tikzplotlib==0.9.6
+
+## References
+
+1. **SCUT-FBP5500 Dataset**: The SCUT-FBP5500 dataset was used to pre-train the modified VGG-16 model for "beauty" feature extraction. For more details, see the original paper:
+   - Xie, D., Liang, S., & Wei, L. (2018). SCUT-FBP5500: A Diverse Benchmark Dataset for Multi-Paradigm Facial Beauty Prediction. *arXiv preprint arXiv:1801.06345*. [Link](https://arxiv.org/abs/1801.06345)
+
+2. **DINO and DINOv2**: DINO (Self-Distillation with No Labels) and its successor DINOv2 are used for extracting CLS tokens from ViT models in this repository. For more details, refer to:
+   - Caron, M., Touvron, H., Misra, I., et al. (2021). Emerging Properties in Self-Supervised Vision Transformers. *Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)*. [Link](https://arxiv.org/abs/2104.14294)
+   - Oquab, M., Darcet, T., Moutakanni, T., et al. (2023). DINOv2: Learning Robust Visual Features without Supervision. *arXiv preprint arXiv:2304.07193*. [Link](https://arxiv.org/abs/2304.07193)
+
+3. **ArcFace Loss Function**: The ArcFace loss function is used in the ONNX model for robust feature extraction. For more details, see:
+   - Deng, J., Guo, J., Xue, N., & Zafeiriou, S. (2019). ArcFace: Additive Angular Margin Loss for Deep Face Recognition. *IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*. [Link](https://arxiv.org/abs/1801.07698)
+  
